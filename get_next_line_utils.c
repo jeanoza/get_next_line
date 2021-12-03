@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/03 00:57:19 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/03 19:48:07 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strndup(const char *src, size_t len)
 	char	*dst;
 	size_t	i;
 
+	if (len == 0)
+		return ((void *) 0);
 	dst = malloc(sizeof(char) * (len + 1));
 	if (dst)
 	{
@@ -49,22 +51,9 @@ char	*ft_strchr(const char *s, int c)
 	i = 0;
 	while (*(s + i) != (char) c)
 	{
-		if (i == (int) ft_strlen((char*) s))
+		if (i == (int) ft_strlen((char *) s))
 			return (0);
 		++i;
 	}
 	return ((char *)(s + i));
-}
-
-void	*ft_memset(void *b, int c, unsigned int len)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < len)
-	{
-		((char *) b)[i] = c;
-		++i;
-	}
-	return (b);
 }

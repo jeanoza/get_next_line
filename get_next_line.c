@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/03 00:58:08 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/03 22:14:44 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,68 +15,48 @@
 #include<stdio.h>//TO_REMOVE
 #include<string.h>//TO_REMOVE
 
-void	*ft_realloc(void *ptr, size_t size)
-{
-	void	*dst;
-	size_t	i;
-
-	dst = malloc(size);
-	if (dst)
-	{
-		ft_memset(ptr, 0, size);
-		i = 0;
-		while (i < size)
-		{
-			((unsigned char *)dst)[i] = ((unsigned char *)ptr)[i];
-			printf("(%zu)dst:%s\n", i, (char *) dst);
-			++i;
-		}
-		free(ptr);
-		return (dst);
-	}
-	free(ptr);
-	return (NULL);
-}
-
 char	*get_next_line(int fd)
 {
-	char	*buffer;
-	char	tmp;
-	size_t	i;
+	static size_t	start;
+	static char		buffer[BUFFER_SIZE];
+	size_t			len;
+	char			*tmp;
 
+	// if (fd < 0 || start > BUFFER_SIZE)
 	if (fd < 0)
 		return (NULL);
-	buffer = malloc(sizeof(char));
-	i = 0;
-	while (read(fd, &tmp, 1) == 1)
+	if (start && start > ft_strlen(buffer))
+		return (NULL);
+	if (!start)
 	{
-		buffer = ft_realloc(buffer, i + 1);
-		if (!buffer)
-			return (NULL);
-		if (tmp == '\n')
-		{
-			buffer[i] = '\0';
-			// printf("[%zu]%d(strlen:%lu)\n", i, buffer[i], strlen(buffer));
-			return (buffer);
-		}
-		buffer[i++] = tmp;
-		// printf("[%zu]%c\n", i - 1, buffer[i - 1]);
+		read(fd, buffer, BUFFER_SIZE);
+		start = 0;
 	}
-	return (NULL);
+	if (ft_strchr(buffer + start, '\n'))
+		len = ft_strchr(buffer + start, '\n') - (buffer + start);
+	else
+		len = ft_strlen(buffer) - start;
+	tmp = ft_strndup(buffer + start, len);
+	start += len + 1;
+	return (tmp);
 }
 int	main(void)
 {
 	int	fd;
 
+
 	fd = open("./test.txt", O_RDONLY);
+	char *str1 = get_next_line(fd);
+	char *str2 = get_next_line(fd);
+	char *str3 = get_next_line(fd);
+	char *str4 = get_next_line(fd);
+	char *str5 = get_next_line(fd);
 	//output
-	printf("(1st exec)		:%s\n", get_next_line(fd));
-	printf("(2st exec)		:%s\n", get_next_line(fd));
-	printf("(3st exec)		:%s\n", get_next_line(fd));
-	printf("(4st exec)		:%s\n", get_next_line(fd));
-	printf("(5st exec)		:%s\n", get_next_line(fd));
-	printf("(6st exec)		:%s\n", get_next_line(fd));
-	printf("(7st exec)		:%s\n", get_next_line(fd));
+	printf("(1st exec)		:%s\n", str1);
+	printf("(2nd exec)		:%s\n", str2);
+	printf("(3rd exec)		:%s\n", str3);
+	printf("(4th exec)		:%s\n", str4);
+	printf("(5th exec)		:%s\n", str5);
 	//compare between output and expected
 	// printf("(1st exec)		:%d\n", strcmp(get_next_line(fd), "1st line"));
 	// printf("(2nd exec)		:%d\n", strcmp(get_next_line(fd), "2nd line"));
@@ -84,34 +64,5 @@ int	main(void)
 	// printf("(4th exec)		:%d\n", strcmp(get_next_line(fd), "4th line"));
 	// printf("(5th exec)		:%d\n", strcmp(get_next_line(fd), "5th line"));
 	close(fd);
-	// while (1);
 	return (0);
 }
-/*
-char	*get_next_line(int fd)
-{
-	char	*buffer = NULL;
-	char	tmp[BUFFER_SIZE];
-	size_t	i;
-
-	if (fd < 0)
-		return (NULL);
-	i = 0;
-	while (read(fd, tmp, BUFFER_SIZE) == 1)
-	{
-		printf("tmp:%s\n", tmp);
-	}
-	return (buffer);
-}
-
-int	main(void)
-{
-	int	fd;
-
-	fd = open("./test.txt", O_RDONLY);
-	get_next_line(fd);
-	close(fd);
-	return (0);
-}
-
-*/
