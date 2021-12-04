@@ -6,7 +6,7 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/03 19:48:07 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/04 16:09:57 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strndup(const char *src, size_t len)
 	return ((void *) 0);
 }
 
-size_t	ft_strlen(char *str)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
@@ -56,4 +56,31 @@ char	*ft_strchr(const char *s, int c)
 		++i;
 	}
 	return ((char *)(s + i));
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	i;
+
+	if (s)
+	{
+		if (start >= ft_strlen(s))
+			len = 0;
+		if (len > ft_strlen(s))
+			len = ft_strlen(s);
+		str = malloc(sizeof(char) * (len + 1));
+		if (str)
+		{
+			i = 0;
+			while (i < len && s[i])
+			{
+				str[i] = s[start + i];
+				++i;
+			}
+			str[i] = 0;
+			return (str);
+		}
+	}
+	return (NULL);
 }

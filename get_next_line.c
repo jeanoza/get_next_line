@@ -6,7 +6,7 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/03 22:18:17 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/04 17:51:16 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,26 @@
 
 char	*get_next_line(int fd)
 {
-	static size_t	start;
 	static char		buffer[BUFFER_SIZE];
-	size_t			len;
+	static size_t	i;
+	char			*new_line;
 	char			*tmp;
 
-	// if (fd < 0 || start > BUFFER_SIZE)
 	if (fd < 0)
 		return (NULL);
-	if (start && start > ft_strlen(buffer))
-		return (NULL);
-	if (!start)
+	i = 0;
+	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
-		read(fd, buffer, BUFFER_SIZE);
-		start = 0;
+		// new_line = ft_strchr(buffer, '\n');
+		// i = 0;
+		printf("\n(%zu):%s\n", i, buffer);
+		++i;
 	}
-	if (ft_strchr(buffer + start, '\n'))
-		len = ft_strchr(buffer + start, '\n') - (buffer + start);
-	else
-		len = ft_strlen(buffer) - start;
-	tmp = ft_strndup(buffer + start, len);
-	start += len + 1;
-	return (tmp);
+
+	return (buffer);
 }
+
+
 int	main(void)
 {
 	int	fd;
@@ -52,11 +49,11 @@ int	main(void)
 	char *str4 = get_next_line(fd);
 	char *str5 = get_next_line(fd);
 	//output
-	printf("(1st exec)		:%s\n", str1);
-	printf("(2nd exec)		:%s\n", str2);
-	printf("(3rd exec)		:%s\n", str3);
-	printf("(4th exec)		:%s\n", str4);
-	printf("(5th exec)		:%s\n", str5);
+	// printf("(1st exec)		:%s\n", str1);
+	// printf("(2nd exec)		:%s\n", str2);
+	// printf("(3rd exec)		:%s\n", str3);
+	// printf("(4th exec)		:%s\n", str4);
+	// printf("(5th exec)		:%s\n", str5);
 	//compare between output and expected
 	// printf("(1st exec)		:%d\n", strcmp(get_next_line(fd), "1st line"));
 	// printf("(2nd exec)		:%d\n", strcmp(get_next_line(fd), "2nd line"));
@@ -66,3 +63,5 @@ int	main(void)
 	close(fd);
 	return (0);
 }
+
+//https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
