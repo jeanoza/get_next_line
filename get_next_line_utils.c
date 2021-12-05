@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/05 17:06:03 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/05 20:43:50 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ size_t	ft_strlen(const char *str)
 char	*ft_strchr(const char *s, int c)
 {
 	int	i;
-	
+
 	if (!s)
 		return (NULL);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/05 17:13:12 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/05 22:30:30 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,20 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
+int	get_new_line_idx(char *buffer)
+{
+	int	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE && buffer[i] != '\0')
+	{
+		if (buffer[i] == '\n')
+			return (i);
+		++i;
+	}
+	return (-1);
+}
+
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
@@ -47,31 +61,33 @@ char	*get_next_line(int fd)
 		return (NULL);
 	tmp = NULL;
 	if (backup)
-		tmp = ft_strndup(backup, ft_strlen(backup));
+		// tmp = ft_strndup(backup, ft_strlen(backup));
+		tmp = backup;
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
 		buffer[BUFFER_SIZE] = 0;
-		new_line = ft_strchr(buffer, '\n');
-		if (new_line)
-			backup = &new_line[1];
 		if (tmp)
 			tmp = ft_strjoin(tmp, buffer);
 		else
 			tmp = ft_strndup(buffer, ft_strlen(buffer));
-		if (ft_strchr(tmp, '\n'))
+		new_line = ft_strchr(tmp, '\n');
+		if (new_line)
 		{
-			*(ft_strchr(tmp, '\n')) = 0;
+			new_line[0] = 0;
+			free(backup);
+			backup = ft_strndup(new_line + 1, ft_strlen(new_line) - 1);
+			// backup = ft_strndup(new_line + 1, BUFFER_SIZE);
+			// printf("tmp:%s, backup:%s\n", tmp, backup);
 			return (tmp);
 		}
 	}
 	return (NULL);
 }
+/*
 int	main(void)
 {
 	// char dst[100];
 	// printf("result:%s\n", ft_strncat(dst, "hello", 4));
-	
-	
 	int	fd;
 	fd = open("./test.txt", O_RDONLY);
 	char *str1 = get_next_line(fd);
@@ -97,3 +113,4 @@ int	main(void)
 }
 
 //https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
+*/
