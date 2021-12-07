@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/07 09:09:05 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/07 18:51:02 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	tmp = NULL;
 	if (backup)
-		tmp = backup;
+		tmp = ft_strndup(backup, ft_strlen(backup));
+	// if (backup)
+	// 	printf("backup[%p]:%s(%d)\n", backup,backup, *backup);
+	// if (tmp)
+	// 	printf("tmp[%p]:%s(%d)\n", tmp,tmp, *tmp);
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
-		if (backup)
-			printf("backup[%p]:%s(%d)\n", backup,backup, *backup);
 		buffer[BUFFER_SIZE] = 0;
 		if (tmp)
 			tmp = ft_strjoin(tmp, buffer);
