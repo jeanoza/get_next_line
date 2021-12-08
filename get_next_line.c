@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/07 18:51:02 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/07 23:00:17 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,34 @@
 #include<stdio.h>//TO_REMOVE
 #include<string.h>//TO_REMOVE
 
+void	ft_bzero(void *s, unsigned int n)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((char *)s)[i] = 0;
+		++i;
+	}
+}
+char	*ft_strncat(char *dest, char *src, size_t nb)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (*(dest + i))
+		++i;
+	j = 0;
+	while (j < nb && *(src + j))
+	{
+		*(dest + i + j) = *(src + j);
+		++j;
+	}
+	*(dest + i + j) = '\0';
+	return (dest);
+}
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*result;
@@ -57,37 +85,33 @@ char	*get_next_line(int fd)
 	static char	*backup;
 	char		*tmp;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	tmp = NULL;
-	if (backup)
-		tmp = ft_strndup(backup, ft_strlen(backup));
-	// if (backup)
-	// 	printf("backup[%p]:%s(%d)\n", backup,backup, *backup);
-	// if (tmp)
-	// 	printf("tmp[%p]:%s(%d)\n", tmp,tmp, *tmp);
-	while (read(fd, buffer, BUFFER_SIZE) > 0)
+	if (backup && ft_strlen(backup) > 0)
+	{
+		tmp = backup;
+		new_line = ft_strchr(tmp, '\n');
+	}
+	while (read(fd, buffer, BUFFER_SIZE) > 0 || new_line)
 	{
 		buffer[BUFFER_SIZE] = 0;
+		printf("buffer:%s\n", buffer);
 		if (tmp)
 			tmp = ft_strjoin(tmp, buffer);
 		else
 			tmp = ft_strndup(buffer, ft_strlen(buffer));
+		// printf("here3 -new_line:%s -tmp:%s\n", new_line, tmp);
 		new_line = ft_strchr(tmp, '\n');
 		if (new_line)
 		{
 			*new_line = 0;
-			if (backup)
-				free(backup);
-			backup = ft_strndup(new_line + 1, ft_strlen(new_line) - 1);
+			// printf("backup:%s\n", backup);
+			backup = ft_strndup(new_line + 1, ft_strlen(new_line + 1));
 			return (tmp);
 		}
 	}
-	if (!new_line && ft_strchr(tmp, '\0'))
-	{
-		*ft_strchr(tmp, '\0') = 0;
-		return (tmp);
-	}
+	*ft_strchr(tmp, '\0') = 0;
 	return (NULL);
 }
 int	main(void)
@@ -104,7 +128,6 @@ int	main(void)
 	//output
 	printf("(1st exec)		:%s\n", str1);
 	printf("(2nd exec)		:%s\n", str2);
-
 	printf("(3rd exec)		:%s\n", str3);
 	printf("(4th exec)		:%s\n", str4);
 	printf("(5th exec)		:%s\n", str5);
@@ -117,5 +140,4 @@ int	main(void)
 	close(fd);
 	return (0);
 }
-
 //https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
