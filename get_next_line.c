@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/07 23:00:17 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/09 14:01:42 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,60 +84,63 @@ char	*get_next_line(int fd)
 	char		*new_line;
 	static char	*backup;
 	char		*tmp;
+	// static int	i = 0; //******TO_REMOVE
 
+	// ++i;
+	// printf("\n(**start_point** => %d)\nbackup:%s\n", i, backup);
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	tmp = NULL;
+	new_line = NULL;
 	if (backup && ft_strlen(backup) > 0)
 	{
 		tmp = backup;
 		new_line = ft_strchr(tmp, '\n');
 	}
-	while (read(fd, buffer, BUFFER_SIZE) > 0 || new_line)
+	// printf("[%d]buffer:%s\n", i, buffer);
+	while (new_line || (read(fd, buffer, BUFFER_SIZE) > 0 && !new_line))
 	{
 		buffer[BUFFER_SIZE] = 0;
-		printf("buffer:%s\n", buffer);
-		if (tmp)
-			tmp = ft_strjoin(tmp, buffer);
-		else
+		if (!tmp)
 			tmp = ft_strndup(buffer, ft_strlen(buffer));
-		// printf("here3 -new_line:%s -tmp:%s\n", new_line, tmp);
+		else if (!new_line)
+			tmp = ft_strjoin(tmp, buffer);
+		// printf("[while]tmp:%s\n", tmp);
 		new_line = ft_strchr(tmp, '\n');
 		if (new_line)
 		{
 			*new_line = 0;
-			// printf("backup:%s\n", backup);
+			if (backup)
+				free(backup);
 			backup = ft_strndup(new_line + 1, ft_strlen(new_line + 1));
 			return (tmp);
 		}
 	}
-	*ft_strchr(tmp, '\0') = 0;
+	// if (backup)
+	// 	free(backup);
 	return (NULL);
 }
+/*
 int	main(void)
 {
-	// char dst[100];
-	// printf("result:%s\n", ft_strncat(dst, "hello", 4));
 	int	fd;
 	fd = open("./test.txt", O_RDONLY);
 	char *str1 = get_next_line(fd);
-	char *str2 = get_next_line(fd);
-	char *str3 = get_next_line(fd);
-	char *str4 = get_next_line(fd);
-	char *str5 = get_next_line(fd);
-	//output
 	printf("(1st exec)		:%s\n", str1);
-	printf("(2nd exec)		:%s\n", str2);
+
+	char *str2 = get_next_line(fd);
+	printf("(2st exec)		:%s\n", str2);
+
+	char *str3 = get_next_line(fd);
 	printf("(3rd exec)		:%s\n", str3);
-	printf("(4th exec)		:%s\n", str4);
-	printf("(5th exec)		:%s\n", str5);
-	//compare between output and expected
-	// printf("(1st exec)		:%d\n", strcmp(get_next_line(fd), "1st line"));
-	// printf("(2nd exec)		:%d\n", strcmp(get_next_line(fd), "2nd line"));
-	// printf("(3rd exec)		:%d\n", strcmp(get_next_line(fd), "3rd line"));
-	// printf("(4th exec)		:%d\n", strcmp(get_next_line(fd), "4th line"));
-	// printf("(5th exec)		:%d\n", strcmp(get_next_line(fd), "5th line"));
+
+	char *str4 = get_next_line(fd);
+	printf("(4rd exec)		:%s\n", str4);
+
+	char *str5 = get_next_line(fd);
+	printf("(5rd exec)		:%s\n", str5);
 	close(fd);
 	return (0);
 }
 //https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
+*/
