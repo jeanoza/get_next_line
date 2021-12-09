@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/09 20:05:57 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/10 00:19:49 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,7 @@ void	ft_bzero(void *s, unsigned int n)
 		++i;
 	}
 }
-char	*ft_strncat(char *dest, char *src, size_t nb)
-{
-	size_t	i;
-	size_t	j;
 
-	i = 0;
-	while (*(dest + i))
-		++i;
-	j = 0;
-	while (j < nb && *(src + j))
-	{
-		*(dest + i + j) = *(src + j);
-		++j;
-	}
-	*(dest + i + j) = '\0';
-	return (dest);
-}
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*result;
@@ -69,25 +53,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
-int	get_new_line_idx(char *buffer)
-{
-	int	i;
-
-	i = 0;
-	while (i < BUFFER_SIZE && buffer[i] != '\0')
-	{
-		if (buffer[i] == '\n')
-			return (i);
-		++i;
-	}
-	return (-1);
-}
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
 	int			ret;
-	static char *backup = "";
-	char		*tmp; 
+	static char	*backup;
+	char		*tmp;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
@@ -98,45 +69,54 @@ char	*get_next_line(int fd)
 		if (ret == -1)
 			return (NULL);
 		buffer[ret] = 0;
+		tmp = backup;
 		backup = ft_strjoin(tmp, buffer);
-		free(tmp);
-		printf("backup:%s ret:%d buffer:%s\n\n", backup, ret, buffer);
-		// if (ft_strchr(backup, '\n'))
-		// {
-		// 	printf("here");
-		// 	return (backup);
-		// }
+		// free(tmp);
+		if (ft_strchr(backup, '\n'))
+			break ;
 	}
+	tmp = backup;
+	if (ft_strchr(tmp, '\n'))
+	{
+		backup = ft_strchr(tmp, '\n');
+		backup++[0] = 0;
+	}
+	else
+		backup = NULL;
+	if (tmp)
+		return (tmp);
 	return (NULL);
 }
-
+/*
 int	main(void)
 {
-	printf("join test:%s\n", ft_strjoin("join", NULL));
 	int	fd;
 	fd = open("./test.txt", O_RDONLY);
 	char *str1 = get_next_line(fd);
 	printf("(1st exec)		:%s\n", str1);
 
-	// char *str2 = get_next_line(fd);
-	// printf("(2st exec)		:%s\n", str2);
+	char *str2 = get_next_line(fd);
+	printf("(2st exec)		:%s\n", str2);
 
-	// char *str3 = get_next_line(fd);
-	// printf("(3rd exec)		:%s\n", str3);
+	char *str3 = get_next_line(fd);
+	printf("(3rd exec)		:%s\n", str3);
 
-	// char *str4 = get_next_line(fd);
-	// printf("(4th exec)		:%s\n", str4);
+	char *str4 = get_next_line(fd);
+	printf("(4th exec)		:%s\n", str4);
 
-	// char *str5 = get_next_line(fd);
-	// printf("(5th exec)		:%s\n", str5);
+	char *str5 = get_next_line(fd);
+	printf("(5th exec)		:%s\n", str5);
 
-	// char *str6 = get_next_line(fd);
-	// printf("(6th exec)		:%s\n", str6);
+	char *str6 = get_next_line(fd);
+	printf("(6th exec)		:%s\n", str6);
+
+	char *str7 = get_next_line(fd);
+	printf("(7th exec)		:%s\n", str7);
 	close(fd);
 	return (0);
 }
+*/
 //https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
-
 
 
 /*
