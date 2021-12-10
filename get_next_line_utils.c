@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/07 19:17:04 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/09 23:10:30 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 		++i;
 	return (i);
 }
