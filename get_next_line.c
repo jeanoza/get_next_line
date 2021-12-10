@@ -6,7 +6,7 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/09 20:05:57 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/10 13:53:45 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,6 @@ void	ft_bzero(void *s, unsigned int n)
 		((char *)s)[i] = 0;
 		++i;
 	}
-}
-char	*ft_strncat(char *dest, char *src, size_t nb)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	while (*(dest + i))
-		++i;
-	j = 0;
-	while (j < nb && *(src + j))
-	{
-		*(dest + i + j) = *(src + j);
-		++j;
-	}
-	*(dest + i + j) = '\0';
-	return (dest);
 }
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -82,12 +65,13 @@ int	get_new_line_idx(char *buffer)
 	}
 	return (-1);
 }
+
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
 	int			ret;
-	static char *backup = "";
-	char		*tmp; 
+	static char	*backup;
+	char		*tmp;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
@@ -99,8 +83,8 @@ char	*get_next_line(int fd)
 			return (NULL);
 		buffer[ret] = 0;
 		backup = ft_strjoin(tmp, buffer);
-		free(tmp);
-		printf("backup:%s ret:%d buffer:%s\n\n", backup, ret, buffer);
+		// free(tmp);
+		// printf("backup:%s ret:%d buffer:%s\n\n", backup, ret, buffer);
 		// if (ft_strchr(backup, '\n'))
 		// {
 		// 	printf("here");
