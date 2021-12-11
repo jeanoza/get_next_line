@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/11 15:06:27 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/11 22:14:50 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ char	*ft_select_nl(char *buffer, int *cursor)
 	int		i;
 	char	*dst;
 
+	// printf("buffer[%p]%s	cursor:%d\n", buffer, buffer, *cursor);
+	if (*cursor == 0 && !buffer)
+		return (NULL);
 	i = 0;
 	while (buffer && buffer[i] && buffer[i] != '\n')
 		++i;
@@ -63,22 +66,21 @@ char	*ft_select_nl(char *buffer, int *cursor)
 	return (dst);
 }
 
-char	*ft_move_cursor(char *buffer)
+char	*ft_move_cursor(char *buffer, int cursor)
 {
 	int		i;
-	int		j;
 	char	*dst;
 
-	i = 0;
-	while (buffer && buffer[i] && buffer[i] != '\n')
-		++i;
-	dst = malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
+	dst = malloc(sizeof(char) * (ft_strlen(buffer) - cursor + 1));
 	if (!dst)
 		return (NULL);
-	j = 0;
-	while (buffer && buffer[i])
-		dst[j++] = buffer[++i];
-	dst[j] = 0;
+	i = 0;
+	while (buffer && buffer[cursor + i])
+	{
+		dst[i] = buffer[cursor + i + 1];
+		++i;
+	}
+	dst[i] = 0;
 	return (dst);
 }
 
@@ -87,37 +89,35 @@ char	*get_next_line(int fd)
 	char		buffer[BUFFER_SIZE + 1];
 	int			cursor;
 	static char	*backup;
-	char		*tmp;
+	char	*tmp;
 	char		*line;
 
-
+	printf("backup[%p]%s\n", backup,backup);
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	cursor = BUFFER_SIZE;
-	while (cursor > 0)
+	while (cursor > 0 && !ft_strchr(backup, '\n'))
 	{
 		cursor = read(fd, buffer, BUFFER_SIZE);
+		if (cursor == 0 && !backup)
+			break ;
 		if (cursor == -1)
 			return (NULL);
 		buffer[cursor] = 0;
 		tmp = backup;
 		backup = ft_strjoin(tmp, buffer);
 		free(tmp);
-		if (ft_strchr(backup, '\n'))
-			break ;
 	}
+	printf("	cursor:%d backup[%p]\n", cursor, backup);
 	line = ft_select_nl(backup, &cursor);
 	tmp = backup;
-	backup = ft_move_cursor(tmp);
-	printf("backup[%p] tmp[%p] chr_n[%p] chr_0[%p] line[%p]%d cursor:%d\n", backup, tmp, ft_strchr(backup, '\n'), ft_strchr(backup, '\0'), line, *line, cursor);
-	free(tmp);
-	// printf("backup[%p]:%s(%d)\n", backup,backup,*backup);
-	if (cursor == 0 && backup[0] == 0)
+	backup = ft_move_cursor(tmp, cursor);
+	if (cursor == 0 && backup && backup[0] == 0)
 	{
-		printf("here\n");
 		free(backup);
 		backup = NULL;
 	}
+	free(tmp);
 	return (line);
 }
 int	main(void)
@@ -147,4 +147,6 @@ int	main(void)
 	close(fd);
 	return (0);
 }
+
+
 //https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
