@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/12 20:43:27 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/12 22:33:26 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*ft_select_nl(char *buffer, char *new_line)
 		dst[i] = buffer[i];
 		++i;
 	}
-	dst[i] = 0;
+	dst[len] = '\0';
 	return (dst);
 }
 
@@ -43,26 +43,24 @@ static char	*ft_move_cursor(char *buffer)
 	int		j;
 	char	*dst;
 
-	if (buffer && (buffer[0] == 0 || ft_strlen(buffer) == 1))
+	if (!(buffer && buffer[0] == 0) && ft_strlen(buffer) > 1)
 	{
-		free(buffer);
-		return (NULL);
+		j = 0;
+		while (buffer && (buffer)[j] && (buffer)[j] != '\n')
+			++j;
+		dst = malloc(sizeof(char) * (ft_strlen(buffer) - j + 1));
+		if (dst)
+		{
+			i = -1;
+			while (buffer && (buffer)[j + ++i])
+				dst[i] = (buffer)[j + i + 1];
+			dst[i] = 0;
+			free(buffer);
+			return (dst);
+		}
 	}
-	j = 0;
-	while (buffer && (buffer)[j] && (buffer)[j] != '\n')
-		++j;
-	dst = malloc(sizeof(char) * (ft_strlen(buffer) - j + 1));
-	if (!dst)
-		return (NULL);
-	i = 0;
-	while (buffer && (buffer)[j + i])
-	{
-		dst[i] = (buffer)[j + i + 1];
-		++i;
-	}
-	dst[i] = 0;
 	free(buffer);
-	return (dst);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -103,12 +101,12 @@ int	main(void)
 
 	char *str2 = get_next_line(fd);
 	printf("(2st exec)		:%s\n\n", str2);
-	int i = 0;
-	while (str2 && str2[i])
-	{
-		printf("str2[%d]:%c(%d)\n", i, str2[i], str2[i]);
-		++i;
-	}
+	// int i = 0;
+	// while (str2 && str2[i])
+	// {
+	// 	printf("str2[%d]:%c(%d)\n", i, str2[i], str2[i]);
+	// 	++i;
+	// }
 
 	char *str3 = get_next_line(fd);
 	printf("(3rd exec)		:%s\n\n", str3);
@@ -124,8 +122,8 @@ int	main(void)
 
 	char *str7 = get_next_line(fd);
 	printf("(7th exec)		:%s\n\n", str7);
-	while (1)
-		;
+	// while (1)
+	// 	;
 	close(fd);
 	return (0);
 }
