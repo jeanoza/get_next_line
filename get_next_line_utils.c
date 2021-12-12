@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/12 17:39:48 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/12 20:57:06 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)(s + i));
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*result;
 	size_t	len;
