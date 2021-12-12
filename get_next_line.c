@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/11 22:14:50 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/12 13:13:15 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,25 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
-char	*ft_select_nl(char *buffer, int *cursor)
+// char	*ft_select_nl(char *buffer, int *cursor)
+char	*ft_select_nl(char *buffer)
 {
 	int		i;
+	int		is_nl;
 	char	*dst;
 
-	// printf("buffer[%p]%s	cursor:%d\n", buffer, buffer, *cursor);
-	if (*cursor == 0 && !buffer)
+	if (buffer[0] == '\0')
 		return (NULL);
+	if (buffer[0] == '\n')
+		return (ft_strndup("\n", 1));
+
+	is_nl = 0;
+	if (ft_strchr(buffer, '\n'))
+		is_nl = 1;
 	i = 0;
 	while (buffer && buffer[i] && buffer[i] != '\n')
 		++i;
-	*cursor = i;
-	dst = malloc(sizeof(char) * (i + 1));
+	dst = malloc(sizeof(char) * (i + 1 + is_nl));
 	if (!dst)
 		return (NULL);
 	i = 0;
@@ -62,45 +68,47 @@ char	*ft_select_nl(char *buffer, int *cursor)
 		dst[i] = buffer[i];
 		++i;
 	}
+	if (is_nl)
+		dst[i++] = '\n';
 	dst[i] = 0;
 	return (dst);
 }
 
-char	*ft_move_cursor(char *buffer, int cursor)
+char	*ft_move_cursor(char *buffer)
 {
 	int		i;
+	int		j;
 	char	*dst;
 
-	dst = malloc(sizeof(char) * (ft_strlen(buffer) - cursor + 1));
+	j = 0;
+	while (buffer && (buffer)[j] && (buffer)[j] != '\n')
+		++j;
+	dst = malloc(sizeof(char) * (ft_strlen(buffer) - j + 1));
 	if (!dst)
 		return (NULL);
 	i = 0;
-	while (buffer && buffer[cursor + i])
+	while (buffer && (buffer)[j + i])
 	{
-		dst[i] = buffer[cursor + i + 1];
+		dst[i] = (buffer)[j + i + 1];
 		++i;
 	}
 	dst[i] = 0;
 	return (dst);
 }
-
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
 	int			cursor;
 	static char	*backup;
-	char	*tmp;
+	char		*tmp;
 	char		*line;
 
-	printf("backup[%p]%s\n", backup,backup);
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	cursor = BUFFER_SIZE;
 	while (cursor > 0 && !ft_strchr(backup, '\n'))
 	{
 		cursor = read(fd, buffer, BUFFER_SIZE);
-		if (cursor == 0 && !backup)
-			break ;
 		if (cursor == -1)
 			return (NULL);
 		buffer[cursor] = 0;
@@ -108,10 +116,9 @@ char	*get_next_line(int fd)
 		backup = ft_strjoin(tmp, buffer);
 		free(tmp);
 	}
-	printf("	cursor:%d backup[%p]\n", cursor, backup);
-	line = ft_select_nl(backup, &cursor);
+	line = ft_select_nl(backup);
 	tmp = backup;
-	backup = ft_move_cursor(tmp, cursor);
+	backup = ft_move_cursor(backup);
 	if (cursor == 0 && backup && backup[0] == 0)
 	{
 		free(backup);
@@ -120,6 +127,7 @@ char	*get_next_line(int fd)
 	free(tmp);
 	return (line);
 }
+/*
 int	main(void)
 {
 	int	fd;
@@ -147,6 +155,4 @@ int	main(void)
 	close(fd);
 	return (0);
 }
-
-
-//https://github.com/edithturn/42-silicon-valley-gnl/blob/master/get_next_line.c
+*/
