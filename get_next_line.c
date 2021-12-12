@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/12 17:40:37 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/12 20:39:30 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ static char	*ft_select_nl(char *buffer, char *new_line)
 
 	if (buffer[0] == '\0')
 		return (NULL);
-	if (buffer[0] == '\n')
-		return (ft_strndup("\n", 1));
 	if (new_line)
 		len = new_line - buffer + 1;
 	else
@@ -105,6 +103,12 @@ int	main(void)
 
 	char *str2 = get_next_line(fd);
 	printf("(2st exec)		:%s\n\n", str2);
+	int i = 0;
+	while (str2 && str2[i])
+	{
+		printf("str2[%d]:%c(%d)\n", i, str2[i], str2[i]);
+		++i;
+	}
 
 	char *str3 = get_next_line(fd);
 	printf("(3rd exec)		:%s\n\n", str3);
@@ -120,8 +124,8 @@ int	main(void)
 
 	char *str7 = get_next_line(fd);
 	printf("(7th exec)		:%s\n\n", str7);
-	// while (1)
-	// 	;
+	while (1)
+		;
 	close(fd);
 	return (0);
 }
