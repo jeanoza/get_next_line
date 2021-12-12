@@ -6,7 +6,7 @@
 /*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 21:27:48 by kyubongchoi       #+#    #+#             */
-/*   Updated: 2021/12/10 21:12:41 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/12 17:39:48 by kyubongchoi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,29 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)(s + i));
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
+	char	*result;
+	size_t	len;
 	size_t	i;
 
-	if (s)
+	len = ft_strlen(s1) + ft_strlen(s2);
+	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
 	{
-		if (start >= ft_strlen(s))
-			len = 0;
-		if (len > ft_strlen(s))
-			len = ft_strlen(s);
-		str = malloc(sizeof(char) * (len + 1));
-		if (str)
-		{
-			i = 0;
-			while (i < len && s[i])
-			{
-				str[i] = s[start + i];
-				++i;
-			}
-			str[i] = 0;
-			return (str);
-		}
+		free((char *)s1);
+		return (NULL);
 	}
-	return (NULL);
+	len = 0;
+	while (s1 && s1[len])
+	{
+		result[len] = s1[len];
+		++len;
+	}
+	free((char *)s1);
+	i = 0;
+	while (s2 && s2[i])
+		result[len++] = s2[i++];
+	result[len] = '\0';
+	return (result);
 }
