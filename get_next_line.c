@@ -6,7 +6,7 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/16 13:15:31 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/16 13:29:22 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ char	*get_next_line(int fd)
 /*
 #include<stdio.h>//TO_REMOVE
 #include<string.h>//TO_REMOVE
+# include <fcntl.h> //TO_REMOVE
 int	main(void)
 {
 	int	fd;

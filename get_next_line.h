@@ -6,7 +6,7 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 13:25:49 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/16 13:26:31 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/16 13:29:35 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #  define OPEN_MAX 32
 # endif
 
-# include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
 
