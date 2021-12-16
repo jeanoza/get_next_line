@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyubongchoi <kyubongchoi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/12 22:33:26 by kyubongchoi      ###   ########.fr       */
+/*   Updated: 2021/12/16 13:15:31 by kychoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	*ft_select_nl(char *buffer, char *new_line)
 		len = new_line - buffer + 1;
 	else
 		len = ft_strlen(buffer);
-	dst = malloc(sizeof(char) * (len + 1));
+	dst = (char *)malloc(sizeof(char) * (len + 1));
 	if (!dst)
 		return (NULL);
 	i = 0;
@@ -48,7 +48,7 @@ static char	*ft_move_cursor(char *buffer)
 		j = 0;
 		while (buffer && (buffer)[j] && (buffer)[j] != '\n')
 			++j;
-		dst = malloc(sizeof(char) * (ft_strlen(buffer) - j + 1));
+		dst = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - j + 1));
 		if (dst)
 		{
 			i = -1;
