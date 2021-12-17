@@ -6,11 +6,11 @@
 /*   By: kychoi <kychoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 09:58:55 by kychoi            #+#    #+#             */
-/*   Updated: 2021/12/16 13:30:05 by kychoi           ###   ########.fr       */
+/*   Updated: 2021/12/17 01:50:24 by kyubongch        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_select_nl(char *buffer, char *new_line)
 {
